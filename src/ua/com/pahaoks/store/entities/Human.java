@@ -3,6 +3,6 @@ package ua.com.pahaoks.store.entities;
 /**
  * Created by lutsishinpa on 13.06.2017.
  */
-public interface Customer extends Human {
-    int buyGoods();
+public interface Human {
+    Strategy strategy(Class receiver);
 }
