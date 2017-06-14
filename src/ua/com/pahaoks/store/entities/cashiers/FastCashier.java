@@ -1,5 +1,6 @@
 package ua.com.pahaoks.store.entities.cashiers;
 
+import ua.com.pahaoks.store.entities.Customer;
 import ua.com.pahaoks.store.entities.annotations.CashierAnnotation;
 import ua.com.pahaoks.store.entities.annotations.CustomerAnnotation;
 import ua.com.pahaoks.store.entities.Strategy;

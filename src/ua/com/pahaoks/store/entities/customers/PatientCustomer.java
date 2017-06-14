@@ -15,8 +15,4 @@ public class PatientCustomer extends AbstractCustomer {
         return PATIENT_CUSTOMER_DELAY;
     }
 
-    @Override
-    public Strategy strategy(Class receiver) {
-        return null;
-    }
 }

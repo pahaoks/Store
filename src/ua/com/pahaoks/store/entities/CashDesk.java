@@ -1,5 +1,7 @@
 package ua.com.pahaoks.store.entities;
 
+import ua.com.pahaoks.store.entities.cashiers.LazyCashier;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -15,7 +17,7 @@ public class CashDesk implements Runnable {
         this.cashier = cashier;
     }
 
-    void addCustomer(Customer customer) {
+    public void addCustomer(Customer customer) {
         customers.add(customer);
     }
 
@@ -34,6 +36,6 @@ public class CashDesk implements Runnable {
             numOfCust++;
         }
 
-        System.out.println("There was " + numOfCust + " for " + totalTime + " seconds");
+        System.out.println("There was " + numOfCust + " customers for " + totalTime + " seconds");
     }
 }
