@@ -1,41 +1,56 @@
 package ua.com.pahaoks.store.entities;
 
-import ua.com.pahaoks.store.entities.cashiers.LazyCashier;
-
-import java.util.LinkedList;
 import java.util.Queue;
+
+import static java.lang.Thread.sleep;
 
 /**
  * Created by lutsishinpa on 13.06.2017.
  */
 public class CashDesk implements Runnable {
-
-    private final Queue<Customer> customers = new LinkedList<>();
+    private final int number;
+    private final Queue<Customer> customers;
     private final Cashier cashier;
 
-    public CashDesk(Cashier cashier) {
+    public CashDesk(Cashier cashier, Queue<Customer> queue, int number) {
         this.cashier = cashier;
+        this.customers = queue;
+        this.number = number;
     }
 
-    public void addCustomer(Customer customer) {
-        customers.add(customer);
+    private void internalSleep(int milis) {
+        try {
+            sleep(milis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void run() {
         int totalTime = 0;
         int numOfCust = 0;
+        int customerCount = 0;
         Customer customer;
 
-        while ((customer = customers.poll()) != null) {
-            Strategy<Customer> cashierStrategy = cashier.strategy(customer.getClass());
-            totalTime += cashierStrategy.communicate(customer);
+        while(true) {
+            synchronized (customers) {
+                customer = customers.poll();
+                customerCount = customers.size();
+            }
+            if (customer != null) {
+                totalTime = 0;
+                System.out.println("CashDesk number " + number + " start work with client");
+                Strategy<Customer> cashierStrategy = cashier.strategy(customer.getClass());
+                totalTime += cashierStrategy.communicate(customer);
+                Strategy<Cashier> customerStrategy = customer.strategy(cashier.getClass());
+                totalTime += customerStrategy.communicate(cashier);
+                numOfCust++;
 
-            Strategy<Cashier> customerStrategy = customer.strategy(cashier.getClass());
-            totalTime += customerStrategy.communicate(cashier);
-            numOfCust++;
+                internalSleep(totalTime * 1000);
+                System.out.println("CashDesk number " + number + " finished work with client for " + totalTime + " seconds. Left " + customerCount);
+            }
+            internalSleep(1000);
         }
-
-        System.out.println("There was " + numOfCust + " customers for " + totalTime + " seconds");
     }
 }

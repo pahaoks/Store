@@ -1,6 +1,5 @@
 package ua.com.pahaoks.store.entities.customers;
 
-import ua.com.pahaoks.store.entities.Strategy;
 import ua.com.pahaoks.store.entities.annotations.CustomerAnnotation;
 
 /**
