@@ -3,6 +3,7 @@ package ua.com.pahaoks.store.entities.cashiers;
 import ua.com.pahaoks.store.entities.Cashier;
 import ua.com.pahaoks.store.entities.Customer;
 import ua.com.pahaoks.store.entities.Strategy;
+import ua.com.pahaoks.store.entities.exceptions.CashierException;
 
 import java.util.Random;
 
@@ -22,7 +23,7 @@ public abstract class AbstractCashier implements Cashier {
     }
 
     @Override
-    public int sellGoods(Customer customer) {
+    public int sellGoods(Customer customer) throws CashierException {
         return random.nextInt(AVERAGE_SCAN_TIME) + delay();
     }
 

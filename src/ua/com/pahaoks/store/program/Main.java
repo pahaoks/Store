@@ -4,6 +4,7 @@ import ua.com.pahaoks.store.entities.CashDesk;
 import ua.com.pahaoks.store.entities.cashiers.AbstractCashier;
 import ua.com.pahaoks.store.entities.cashiers.FastCashier;
 import ua.com.pahaoks.store.entities.customers.AbstractCustomer;
+import ua.com.pahaoks.store.entities.exceptions.StoreException;
 import ua.com.pahaoks.store.entities.stores.AbstractStore;
 
 /**
@@ -11,11 +12,16 @@ import ua.com.pahaoks.store.entities.stores.AbstractStore;
  */
 public class Main {
     public static void main(String[] args) {
+        try (AbstractStore store = AbstractStore.constructRandomized(10)) {
+            System.out.println("Store started");
 
-        AbstractStore store = AbstractStore.constructRandomized(10);
-
-        for (int i = 0; i < 50; i++) {
-            store.newCustomer(AbstractCustomer.constructRandomized());
+            for (int i = 0; i < 50; i++) {
+                store.newCustomer(AbstractCustomer.constructRandomized());
+            }
+        } catch (StoreException ex) {
+            System.out.println("Store has thrown a StoreException: " + ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println("Store has thrown some exception: " + ex.getMessage());
         }
     }
 }

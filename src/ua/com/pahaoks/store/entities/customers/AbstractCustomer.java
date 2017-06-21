@@ -3,6 +3,7 @@ package ua.com.pahaoks.store.entities.customers;
 import ua.com.pahaoks.store.entities.Customer;
 import ua.com.pahaoks.store.entities.Strategy;
 import ua.com.pahaoks.store.entities.annotations.CashierAnnotation;
+import ua.com.pahaoks.store.entities.exceptions.CustomerException;
 import ua.com.pahaoks.store.entities.strategies.customerStrategies.CustomerForFastCashierStrategy;
 import ua.com.pahaoks.store.entities.strategies.customerStrategies.CustomerForLazyCashierStrategy;
 import java.lang.Class;
@@ -24,7 +25,7 @@ public abstract class AbstractCustomer implements Customer {
     }
 
     @Override
-    public int buyGoods() {
+    public int buyGoods() throws CustomerException {
         return random.nextInt(AVERAGE_BUY_TIME) + delay();
     }
 

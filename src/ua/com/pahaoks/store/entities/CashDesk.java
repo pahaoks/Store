@@ -1,5 +1,8 @@
 package ua.com.pahaoks.store.entities;
 
+import ua.com.pahaoks.store.entities.exceptions.CashierException;
+import ua.com.pahaoks.store.entities.exceptions.CustomerException;
+
 import java.util.Queue;
 
 import static java.lang.Thread.sleep;
@@ -30,26 +33,35 @@ public class CashDesk implements Runnable {
     public void run() {
         int totalTime = 0;
         int numOfCust = 0;
-        int customerCount = 0;
         Customer customer;
 
         while(true) {
+
             synchronized (customers) {
                 customer = customers.poll();
-                customerCount = customers.size();
             }
-            if (customer != null) {
-                totalTime = 0;
-                System.out.println("CashDesk number " + number + " start work with client");
-                Strategy<Customer> cashierStrategy = cashier.strategy(customer.getClass());
-                totalTime += cashierStrategy.communicate(customer);
-                Strategy<Cashier> customerStrategy = customer.strategy(cashier.getClass());
-                totalTime += customerStrategy.communicate(cashier);
-                numOfCust++;
 
-                internalSleep(totalTime * 1000);
-                System.out.println("CashDesk number " + number + " finished work with client for " + totalTime + " seconds. Left " + customerCount);
+            try {
+                if (customer != null) {
+                    totalTime = 0;
+                    System.out.println("CashDesk number " + number + " start work with client");
+                    Strategy<Customer> cashierStrategy = cashier.strategy(customer.getClass());
+                    totalTime += cashierStrategy.communicate(customer);
+                    Strategy<Cashier> customerStrategy = customer.strategy(cashier.getClass());
+                    totalTime += customerStrategy.communicate(cashier);
+                    numOfCust++;
+
+                    internalSleep(totalTime * 1000);
+                    System.out.println("CashDesk number " + number + " finished work with client for " + totalTime + " seconds. Total " + numOfCust);
+                }
+            } catch (CustomerException custException) {
+                System.out.println("Customer has thrown an exception: " + custException.getMessage());
+            } catch (CashierException cashierException) {
+                System.out.println("Cashier has thrown an exception: " + cashierException.getMessage());
+            } catch (Exception ex) {
+                System.out.println("There was an exception: " + ex.getMessage());
             }
+
             internalSleep(1000);
         }
     }
